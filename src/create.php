@@ -43,6 +43,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <br>
         <input type="submit" value="Submit">
     </form>
-    <a href="read.php">Kembali ke Pengguna</a>
+    <div style="text-align: center;">
+        <a href="read.php">Kembali ke Pengguna</a>
+    </div>
 </body>
 </html>
