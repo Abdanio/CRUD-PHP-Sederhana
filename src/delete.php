@@ -1,6 +1,8 @@
 <?php
 require_once 'db/connection.php';
 
+$message = '';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_POST['id'];
 
@@ -10,10 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Execute the statement
     if ($stmt->execute()) {
-        header("Location: read.php?message=Data berhasil dihapus");
-        exit();
+        $message = "Data berhasil dihapus";
     } else {
-        echo "Error menghapus data: " . $stmt->error;
+        $message = "Error menghapus data: " . $stmt->error;
     }
 
     // Close the statement
@@ -32,8 +33,26 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hapus Data</title>
     <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function showAlert(message) {
+            if (message) {
+                Swal.fire({
+                    title: 'Informasi',
+                    text: message,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'read.php';
+                    }
+                });
+            }
+        }
+    </script>
 </head>
-<body>
+<body onload="showAlert('<?php echo $message; ?>')">
     <h2>Hapus Data</h2>
     <form method="POST" action="delete.php">
         <label for="id">Pilih Pengguna:</label>

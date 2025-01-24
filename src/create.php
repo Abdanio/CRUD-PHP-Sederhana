@@ -1,6 +1,8 @@
 <?php
 require_once 'db/connection.php';
 
+$message = '';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
     $email = $_POST['email'];
@@ -11,17 +13,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("ss", $name, $email);
 
         if ($stmt->execute()) {
-            echo "Data baru berhasil dibuat";
+            $message = "Data baru berhasil dibuat";
         } else {
-            echo "Error: " . $stmt->error;
+            $message = "Error: " . $stmt->error;
         }
 
         $stmt->close();
     } else {
-        echo "Nama dan email diperlukan.";
+        $message = "Nama dan email diperlukan.";
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -31,8 +32,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buat Data</title>
     <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function showAlert(message) {
+            if (message) {
+                Swal.fire({
+                    title: 'Informasi',
+                    text: message,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'read.php';
+                    }
+                });
+            }
+        }
+    </script>
 </head>
-<body>
+<body onload="showAlert('<?php echo $message; ?>')">
     <h2>Buat Data Baru</h2>
     <form method="post" action="">
         <label for="name">Nama:</label>
